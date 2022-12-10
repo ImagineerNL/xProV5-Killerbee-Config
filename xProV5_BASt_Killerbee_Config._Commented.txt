@@ -1,0 +1,152 @@
+; Commented Base Settings for xPro V5 on a Ratrig Killerbee
+; Made by BASt (www.bast-hout.nl/ratrig )
+; xPro V5 settings Wiki : https://github.com/Spark-Concepts/xPro-V5/wiki/Changing-settings
+; Uncommented version of this file so you can compare it with your file:
+; Get your settings by typing in console: $S or Settings/List
+; Compare your file with my file on : https://www.diffchecker.com
+; Settings are based on motor wiring according to the ratrig Dozuki: https://ratrig.dozuki.com/Guide/10.+Wiring+Diagrams/67?lang=en
+; Position of machine is based on GRBL position, NOT on Ratrig position, so:
+; 1) BACK is where Y motors are, moving Y+ is to the back, Y- is to the front.
+; 2) Left is where X motor is. Moving X+ is to the right, X- is to the left.
+; This should match the view in the xPro webcontrol / cncjs / Openbuilds Control.
+; 3) Top is where Z motor is. Z+ moves up, Z- moves down
+; 4) Machine Coordinate 0,0,0 is X max RIGHT, Y Max Back, Z at TOP.
+; 5) But Homing Location is: X max LEFT, Y Max Back, Z at TOP
+
+; You can enable Self Squaring Y Axes if you have an extra limit switch, following this video: https://www.youtube.com/watch?v=QcH7lrortzg 
+; My setup is with a Kress / AMB Spindle. Adjust to your spindle
+; Kress/AMB Spindles MUST be wired through the Relay!
+; My setup is a 1075. Adjust Maxtravel to your size. For reference, see Working volume in Ratrig Critical Dimensions: https://ratrig.dozuki.com/Guide/00.+BOM+&+Machine+Critical+Dimensions/75?lang=en https://d3t0tbmlie281e.cloudfront.net/igi/ratrig/JK1jbYmcCKNeRKAm.large
+; My setup is bolted directly to the table and the spoilboard bolted to the table as well (so no alu extrusions underneith), gaining about 4cm.
+
+; ============================= The Below settings not included in setup =================
+$Sta/SSID=CNC_xPRO_V5
+$Sta/Password=******
+$Sta/IPMode=DHCP
+$Sta/IP=0.0.0.0
+$Sta/Gateway=0.0.0.0
+$Sta/Netmask=0.0.0.0
+$AP/SSID=CNC_xPRO_V5
+$AP/Password=******
+$AP/IP=192.168.0.1
+$AP/Channel=1
+$System/Hostname=CNC_xPRO_V5
+$Http/Enable=ON
+$Http/Port=80
+$Telnet/Enable=ON
+$Telnet/Port=23
+$Radio/Mode=AP
+$Bluetooth/Name=xPRO_V5_BT
+$Notification/Type=NONE
+$Notification/T1=
+$Notification/T2=
+$Notification/TS=
+$Message/Level=Info
+$User/Macro0=
+$User/Macro1=
+$User/Macro2=
+$User/Macro3=
+; ============================= The Above settings not included in setup =================
+
+$Homing/Cycle0=Z ; First raise and home the Z height to its max position
+$Homing/Cycle1=XY ; Then home X and Y to their respective home
+$Homing/Cycle2= ; If you have the Self Squaring Y Axes you can add $Homing/Cycle2=Y to automatically square your Y Axis during homing
+$Homing/Cycle3=
+$Homing/Cycle4=
+$Homing/Cycle5=
+$Report/StallGuard=
+$Stepper/Enable/Delay=0
+$Stepper/Direction/Delay=0
+$Stepper/Pulse=4
+$Stepper/IdleTime=255 ; Time before steppers are disabled when idle. 255 is never disable, so it doesnt move unless you tell it to
+$Stepper/StepInvert=
+$Stepper/DirInvert=Y
+$Stepper/EnableInvert=Off
+$Limits/Invert=On
+$Probe/Invert=On
+$Report/Status=1
+$GCode/JunctionDeviation=0.010
+$GCode/ArcTolerance=0.002
+$Report/Inches=Off
+$Firmware/Build=
+$Limits/Soft=On ; Stop the machine travelling past distances set in $../MaxTravel. Note, the move doesnt stop when triggering a limitswitch, unless in a homing move.
+$Limits/Hard=Off ; This is up to you. By turning this on, the machine stops moving after triggering a limitswitch and raise an alarm which can only be reset by resetting the controller. This is a safetyfeature, but since we only have a switch on one end, it still isnt fully safe.
+$Homing/Enable=On ; always enable homing.
+$Homing/DirInvert=X ; See point 5) above
+$Homing/Squared=N ; Set this to Y if you have Self Squaring Y Axes
+$Homing/Feed=100.000
+$Homing/Seek=1000.000
+$Homing/Debounce=250.000
+$Homing/Pulloff=5.000
+$GCode/MaxS=25000.000 ; Max Spindle speed of the Kress/AMB Spindle. Adjust to your spindle Speed
+$GCode/MinS=300.000 ; Minimum Spindle speed of the Kress/AMB Spindle. Adjust to your spindle Speed
+$Laser/FullPower=1000
+$GCode/LaserMode=Off
+$GCode/Line1=
+$GCode/Line0=
+$Spindle/Enable/Invert=Off
+$Spindle/Enable/OffWithSpeed=ON ; Enablind this setting sets the relay to OFF when an S0 command is given, regardless of an M3/M4/M5 command.
+$Coolant/Delay/TurnOn=1.000
+$Spindle/Delay/SpinDown=0.000 ; Your spindle takes time to spin down to 0. Set the delay here, or in your postprocessor. Kress/AMB Spindles take about 5 seconds to spin down.
+$Spindle/Delay/SpinUp=0.000 ; Your spindle takes time to spin up to its set speed. Set the delay here, or in your postprocessor. Kress/AMB Spindles take about 5 seconds to spin up.
+$Spindle/PWM/Invert=Off
+$Spindle/PWM/Frequency=5000.000
+$Spindle/PWM/Off=0.000
+$Spindle/PWM/Min=0.000
+$Spindle/PWM/Max=100.000
+$Spindle/Type=PWM ; Kress/AMB is a PWM spindle
+$X/StepsPerMm=200.000 ; Default for the RatRig motors. (Motors 1.8 degree per step, microstepping at 8 = 0.225 per step. = 1600 steps per turn. leadscrew Tr8*8-2p = 8mm per turn. 1600steps / 8mm = 200steps/mm) Finetuning this is only valid for belts as they can stretch.
+$Y/StepsPerMm=200.000 ; See $X/StepsPerMm
+$Z/StepsPerMm=200.000 ; See $X/StepsPerMm
+$A/StepsPerMm=200.000 ; See $X/StepsPerMm. ; A = Y2 motor. System should ignore A and use Y value for Y2 but better be safe and use same settings as Y/
+$B/StepsPerMm=100.000 
+$C/StepsPerMm=100.000 
+$X/MaxRate=3000.000 ; Max moving speed (and Jog Speed) 3000 is about max for my 1075. Start with 2000 and tune this when everything is set up.
+$Y/MaxRate=2500.000
+$Z/MaxRate=1000.000
+$A/MaxRate=2500.000 ; A = Y2 motor. System should ignore A and use Y value for Y2 but better be safe and use same settings as Y/
+$B/MaxRate=1000.000
+$C/MaxRate=1000.000
+$X/Acceleration=200.000 ; Finetune this for your build after everything is set up. 
+$Y/Acceleration=200.000
+$Z/Acceleration=200.000
+$A/Acceleration=200.000
+$B/Acceleration=200.000
+$C/Acceleration=200.000
+$X/Home/Mpos=-530.000 ; See 4) and 5) above. Set this to the NEGATIVE value of $X/Maxtravel
+$Y/Home/Mpos=0.000
+$Z/Home/Mpos=0.000
+$A/Home/Mpos=0.000
+$B/Home/Mpos=0.000
+$C/Home/Mpos=0.000
+$X/MaxTravel=530.000 ; Max travel for my 1075 build including a dust shoe. Tune these settings to your working volume.
+$Y/MaxTravel=740.000 ; See $X/MaxTravel
+$Z/MaxTravel=120.000 ; See $X/MaxTravel
+$A/MaxTravel=740.000 ; See $X/MaxTravel. A = Y2 motor. System should ignore A and use Y value for Y2 but better be safe and use same settings as Y/ 
+$B/MaxTravel=300.000
+$C/MaxTravel=300.000
+$X/Current/Run=1.800 ; Safe settings according to xPro V5 Wiki. DO NOT CHANGE THIS as long as this issue isnt cleared: https://github.com/Spark-Concepts/xPro-V5/issues/121
+$Y/Current/Run=1.800 ; See $X/Current/Run
+$Z/Current/Run=1.800 ; See $X/Current/Run
+$A/Current/Run=1.800 ; See $X/Current/Run
+$B/Current/Run=1.800
+$C/Current/Run=1.800
+$X/Current/Hold=1.100 ; Safe settings according to xPro V5 Wiki.
+$Y/Current/Hold=1.100 ; See $X/Current/Hold
+$Z/Current/Hold=1.100 ; See $X/Current/Hold
+$A/Current/Hold=1.100 ; See $X/Current/Hold
+$B/Current/Hold=0.400
+$C/Current/Hold=0.400
+$X/Microsteps=8 ; You can set this to 16 for more precision, but then set $X/StepsPerMm=400 but this also lowers your torque. 8 is a good precision setting.
+$Y/Microsteps=8
+$Z/Microsteps=8
+$A/Microsteps=8
+$B/Microsteps=16
+$C/Microsteps=16
+$X/StallGuard=16
+$Y/StallGuard=16
+$Z/StallGuard=16
+$A/StallGuard=16
+$B/StallGuard=16
+$C/StallGuard=16
+$Errors/Verbose=Off
